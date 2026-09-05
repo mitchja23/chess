@@ -55,6 +55,8 @@ public class ChessPiece {
         Collection<ChessMove> moves = new ArrayList<>();
         if (type == PieceType.KING){
             kingMoves(board, myPosition, moves);
+        }else if (type == PieceType.QUEEN){
+            queenMoves(board, myPosition, moves);
         }
         return moves;
     }
@@ -76,6 +78,33 @@ public class ChessPiece {
             else if (otherColor(board, newPosition)){
                 moves.add(new ChessMove(myPosition, newPosition, null));
             }
+        }
+    }
+
+    private void queenMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
+        int[][] directions ={
+                {1, 0}, {-1, 0}, {0, 1}, {0, -1},{1, 1}, {1, -1}, {-1, 1}, {-1, -1}
+        };
+        for (int[] direction : directions){
+            int row = myPosition.getRow();
+            int col = myPosition.getColumn();
+
+            while(true) {
+                row += direction[0];
+                row += direction[1];
+                ChessPosition newPosition = new ChessPosition(row,col);
+
+                if (inBounds(newPosition)){
+                    break;
+                }
+                if(openSpace(board, newPosition)){
+                    moves.add(new ChessMove(myPosition, newPosition,null));
+                }
+                else if (otherColor(board, newPosition)){
+                    moves.add(new ChessMove(myPosition, newPosition,null));
+                }
+            }
+            break;
         }
     }
 
