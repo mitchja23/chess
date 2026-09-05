@@ -59,6 +59,8 @@ public class ChessPiece {
             queenMoves(board, myPosition, moves);
         }else if (type == PieceType.BISHOP){
             bishopMoves(board, myPosition, moves);
+        }else if (type == PieceType.ROOK){
+            rookMoves(board, myPosition, moves)
         }
         return moves;
     }
@@ -136,6 +138,34 @@ public class ChessPiece {
             break;
         }
     }
+
+    private void rookMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
+        int [][] directions = {
+                {1, 0}, {-1, 0}, {0, 1}, {0, -1}
+        };
+        for (int[] direction : directions){
+            int row = myPosition.getRow();
+            int col = myPosition.getColumn();
+
+            while(true) {
+                row += direction[0];
+                row += direction[1];
+                ChessPosition newPosition = new ChessPosition(row,col);
+
+                if (inBounds(newPosition)){
+                    break;
+                }
+                if(openSpace(board, newPosition)){
+                    moves.add(new ChessMove(myPosition, newPosition,null));
+                }
+                else if (otherColor(board, newPosition)){
+                    moves.add(new ChessMove(myPosition, newPosition,null));
+                }
+            }
+            break;
+        }
+    }
+
 
 
 
