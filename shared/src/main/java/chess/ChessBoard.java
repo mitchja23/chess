@@ -1,6 +1,8 @@
 package chess;
 
 
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -39,6 +41,50 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        for (int row = 0; row < 8; row++){
+            for (int col = 0; col < 8; col ++){
+                squares[row][col] = null;
+            }
+        }
+        for (int col = 0; col < 8; col++){
+            squares[1][col] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            squares[6][col] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+        }
+        ChessPiece.PieceType[] backRow = {
+                ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK
+        };
+        for (int col = 0; col < 8; col++){
+            squares[0][col] = new ChessPiece(ChessGame.TeamColor.WHITE, backRow[col]);
+            squares[7][col] = new ChessPiece(ChessGame.TeamColor.BLACK, backRow[col]);
+        }
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPiece thisPiece = this.squares[row][col];
+                ChessPiece thatPiece = that.squares[row][col];
+                if (!Objects.equals(thisPiece, thatPiece)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    @Override
+    public int hashCode() {
+        int result = 1;
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                result = 31 * result + (squares[row][col] != null ? squares[row][col].hashCode() : 0);
+            }
+        }
+        return result;
     }
 }
