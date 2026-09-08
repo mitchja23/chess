@@ -100,10 +100,10 @@ public class ChessPiece {
 
             while(true) {
                 row += direction[0];
-                row += direction[1];
+                col += direction[1];
                 ChessPosition newPosition = new ChessPosition(row,col);
 
-                if (inBounds(newPosition)){
+                if (offBoard(newPosition)){
                     break;
                 }
                 if(openSpace(board, newPosition)){
@@ -127,10 +127,10 @@ public class ChessPiece {
 
             while(true) {
                 row += direction[0];
-                row += direction[1];
+                col += direction[1];
                 ChessPosition newPosition = new ChessPosition(row,col);
 
-                if (inBounds(newPosition)){
+                if (offBoard(newPosition)){
                     break;
                 }
                 if(openSpace(board, newPosition)){
@@ -154,10 +154,10 @@ public class ChessPiece {
 
             while(true) {
                 row += direction[0];
-                row += direction[1];
+                col += direction[1];
                 ChessPosition newPosition = new ChessPosition(row,col);
 
-                if (inBounds(newPosition)){
+                if (offBoard(newPosition)){
                     break;
                 }
                 if(openSpace(board, newPosition)){
@@ -214,6 +214,7 @@ public class ChessPiece {
                 new ChessPosition(myPosition.getRow() + col, myPosition.getColumn() +1)
         };
         for (ChessPosition position : diagonal){
+            if(offBoard(position)) continue;
             if(otherColor(board, position)){
                 if (position.getRow() == promotion){
                     promoMoves(myPosition, position, moves);
