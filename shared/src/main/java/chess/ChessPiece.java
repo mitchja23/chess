@@ -111,9 +111,12 @@ public class ChessPiece {
                 }
                 else if (otherColor(board, newPosition)){
                     moves.add(new ChessMove(myPosition, newPosition,null));
+                    break;
+                }
+                else{
+                    break;
                 }
             }
-            break;
         }
     }
 
@@ -138,9 +141,12 @@ public class ChessPiece {
                 }
                 else if (otherColor(board, newPosition)){
                     moves.add(new ChessMove(myPosition, newPosition,null));
+                    break;
+                }
+                else{
+                    break;
                 }
             }
-            break;
         }
     }
 
@@ -165,9 +171,12 @@ public class ChessPiece {
                 }
                 else if (otherColor(board, newPosition)){
                     moves.add(new ChessMove(myPosition, newPosition,null));
+                    break;
+                }
+                else{
+                    break;
                 }
             }
-            break;
         }
     }
 
