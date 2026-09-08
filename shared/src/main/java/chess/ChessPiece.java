@@ -64,7 +64,7 @@ public class ChessPiece {
         }else if (type == PieceType.KNIGHT){
             knightMoves(board, myPosition, moves);
         }else if (type == PieceType.PAWN){
-            pawnMoves(board, myPosition, moves)
+            pawnMoves(board, myPosition, moves);
         }
         return moves;
     }
@@ -193,9 +193,14 @@ public class ChessPiece {
     private void pawnMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
         int row = (pieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
         int col = (pieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
+        int promotion = (pieceColor == ChessGame.TeamColor.WHITE) ? 8 : 1;
         ChessPosition newPosition = new ChessPosition(myPosition.getRow() + col, myPosition.getColumn());
         if(openSpace(board, newPosition)){
-            moves.add(new ChessMove(myPosition, newPosition, null));
+            if(newPosition.getRow() == promotion){
+                promoMoves(myPosition, newPosition, moves);
+            }else {
+                moves.add(new ChessMove(myPosition, newPosition, null));
+            }
         }
         if(myPosition.getRow() == row){
             ChessPosition startMove = new ChessPosition(myPosition.getRow() + 2 * col, myPosition.getColumn());
@@ -207,6 +212,15 @@ public class ChessPiece {
                 new ChessPosition(myPosition.getRow() + col, myPosition.getColumn() -1),
                 new ChessPosition(myPosition.getRow() + col, myPosition.getColumn() +1)
         };
+        for (ChessPosition position : diagonal){
+            if(otherColor(board, position)){
+                if (position.getRow() == promotion){
+                    promoMoves(myPosition, position, moves);
+                } else {
+                    moves.add(new ChessMove(myPosition, position, null));
+                }
+            }
+        }
     }
 
 
@@ -230,6 +244,13 @@ public class ChessPiece {
         int row = position.getRow();
         int col = position.getColumn();
         return row < 1 || row > 8 || col < 1 || col > 8;
+    }
+
+    private void promoMoves(ChessPosition start, ChessPosition end, Collection<ChessMove> moves){
+        moves.add(new ChessMove(start, end, ChessPiece.PieceType.QUEEN));
+        moves.add(new ChessMove(start, end, ChessPiece.PieceType.BISHOP));
+        moves.add(new ChessMove(start, end, ChessPiece.PieceType.KNIGHT));
+        moves.add(new ChessMove(start, end, ChessPiece.PieceType.ROOK));
     }
 
 }
