@@ -63,6 +63,8 @@ public class ChessPiece {
             rookMoves(board, myPosition, moves);
         }else if (type == PieceType.KNIGHT){
             knightMoves(board, myPosition, moves);
+        }else if (type == PieceType.PAWN){
+            pawnMoves(board, myPosition, moves)
         }
         return moves;
     }
@@ -188,6 +190,24 @@ public class ChessPiece {
         }
     }
 
+    private void pawnMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
+        int row = (pieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
+        int col = (pieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
+        ChessPosition newPosition = new ChessPosition(myPosition.getRow() + col, myPosition.getColumn());
+        if(openSpace(board, newPosition)){
+            moves.add(new ChessMove(myPosition, newPosition, null));
+        }
+        if(myPosition.getRow() == row){
+            ChessPosition startMove = new ChessPosition(myPosition.getRow() + 2 * col, myPosition.getColumn());
+            if (openSpace(board, startMove)){
+                moves.add(new ChessMove(myPosition, startMove,null));
+            }
+        }
+        ChessPosition[] diagonal = {
+                new ChessPosition(myPosition.getRow() + col, myPosition.getColumn() -1),
+                new ChessPosition(myPosition.getRow() + col, myPosition.getColumn() +1)
+        };
+    }
 
 
     private boolean openSpace(ChessBoard board, ChessPosition position) {
