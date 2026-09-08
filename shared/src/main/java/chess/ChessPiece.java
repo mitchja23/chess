@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -13,7 +14,7 @@ public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type, ChessGame.TeamColor pieceColor1, PieceType type1) {
+    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
     }
@@ -201,11 +202,11 @@ public class ChessPiece {
             }else {
                 moves.add(new ChessMove(myPosition, newPosition, null));
             }
-        }
-        if(myPosition.getRow() == row){
-            ChessPosition startMove = new ChessPosition(myPosition.getRow() + 2 * col, myPosition.getColumn());
-            if (openSpace(board, startMove)){
-                moves.add(new ChessMove(myPosition, startMove,null));
+            if(myPosition.getRow() == row){
+                ChessPosition forwardTwo = new ChessPosition(myPosition.getRow() + 2 * col, myPosition.getColumn());
+                if (openSpace(board, forwardTwo)){
+                    moves.add(new ChessMove(myPosition, forwardTwo,null));
+                }
             }
         }
         ChessPosition[] diagonal = {
@@ -252,5 +253,19 @@ public class ChessPiece {
         moves.add(new ChessMove(start, end, ChessPiece.PieceType.KNIGHT));
         moves.add(new ChessMove(start, end, ChessPiece.PieceType.ROOK));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ChessPiece that = (ChessPiece) obj;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
+    }
+
 
 }
