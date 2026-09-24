@@ -246,11 +246,6 @@ public class ChessPiece {
         return piece != null && piece.getTeamColor() != this.pieceColor;
     }
 
-    private boolean inBounds(ChessPosition position) {
-        return position.getRow() >= 1 && position.getRow() <= 8 &&
-                position.getColumn() >= 1 && position.getColumn() <= 8;
-    }
-
     private boolean offBoard(ChessPosition position){
         int row = position.getRow();
         int col = position.getColumn();
