@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Collections;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -16,6 +17,8 @@ public class ChessGame {
 
     public ChessGame() {
         currentColor = TeamColor.WHITE;
+        board = new ChessBoard();
+        board.resetBoard();
 
     }
 
@@ -56,7 +59,7 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(startPosition);
 
         if (piece == null){
-            return  null;
+            return  Collections.emptyList();
         }
 
         Collection<ChessMove> validMoves = piece.pieceMoves(board, startPosition);
@@ -88,9 +91,14 @@ public class ChessGame {
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
         currentColor = (currentColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
         if(!moves.contains(move)){
-            throw new InvalidMoveException("Illegal Move");
+            throw new InvalidMoveException("illegal move");
         }
         ChessPiece piece = board.getPiece(move.getStartPosition());
+
+        if (piece.getTeamColor() != currentColor) {
+            throw new InvalidMoveException("wrong turn");
+        }
+
         board.addPiece(move.getEndPosition(), piece);
         board.addPiece(move.getStartPosition(), null);
 
@@ -136,7 +144,7 @@ public class ChessGame {
         for(int row  = 1; row <= 8; row++){
             for(int col = 1; col <= 8; col++){
                 ChessPosition position = new ChessPosition(row, col);
-                ChessPiece piece = board.getPiece(position):
+                ChessPiece piece = board.getPiece(position);
 
                 if (piece != null && piece.getTeamColor() != teamColor){
                     Collection<ChessMove> opponentMoves = piece.pieceMoves(board, position);
