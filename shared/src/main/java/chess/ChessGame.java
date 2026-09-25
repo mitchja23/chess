@@ -101,11 +101,13 @@ public class ChessGame {
 
 
         if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
-            int promote = (piece.getTeamColor() == TeamColor.WHITE) ? 8 : 1;
-            if(move.getEndPosition().getRow() == promote){
-                ChessPiece.PieceType upgrade = ChessPiece.PieceType.QUEEN;
-                ChessPiece newPiece = new ChessPiece(piece.getTeamColor(), upgrade);
-                board.addPiece(move.getEndPosition(), newPiece);
+            int promoteRank = (piece.getTeamColor() == TeamColor.WHITE) ? 8 : 1;
+            if (move.getEndPosition().getRow() == promoteRank) {
+                ChessPiece.PieceType upgrade = move.getPromotionPiece();
+                if (upgrade == null) {
+                    upgrade = ChessPiece.PieceType.QUEEN;
+                }
+                board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), upgrade));
             }
         }
 
