@@ -68,6 +68,10 @@ public class ChessGame {
             currentState.addPiece(move.getEndPosition(), movingPiece);
             currentState.addPiece(startPosition, null);
 
+            if(isInCheck(currentState, piece.getTeamColor())){
+                possibleMoves.remove();
+            }
+
         }
         return validMoves;
 
