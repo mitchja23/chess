@@ -82,12 +82,18 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
+        currentColor = (currentColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
         if(!moves.contains(move)){
             throw new InvalidMoveException("Illegal Move");
         }
         ChessPiece piece = board.getPiece(move.getStartPosition());
         board.addPiece(move.getEndPosition(), piece);
         board.addPiece(move.getStartPosition(), null);
+
+        ChessPiece opp = board.getPiece(move.getEndPosition());
+        if(opp != null && opp.getTeamColor() != currentColor){
+            board.addPiece(move.getEndPosition(), opp);
+        }
 
 
         if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
