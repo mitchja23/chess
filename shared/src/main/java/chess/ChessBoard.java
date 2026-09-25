@@ -77,6 +77,23 @@ public class ChessBoard {
         }
         return true;
     }
+
+    public ChessBoard simulateBoard(){
+        ChessBoard simulate = new ChessBoard();
+
+        for (int row = 1; row <= 8; row++){
+            for(int col = 1; col <= 8; col++ ){
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = this.getPiece(pos);
+                if (piece != null){
+                    simulate.addPiece(pos, new ChessPiece(piece.getTeamColor(), piece.getPieceType()));
+                }
+            }
+        }
+        return  simulate;
+    }
+
+
     @Override
     public int hashCode() {
         int result = 1;
