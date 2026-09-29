@@ -71,7 +71,7 @@ public class ChessGame {
             currentState.addPiece(move.getEndPosition(), movingPiece);
             currentState.addPiece(startPosition, null);
 
-            if(isInCheck(currentState, piece.getTeamColor())){
+            if(isInCheck(piece.getTeamColor(), currentState)){
                 possibleMoves.remove();
             }
 
@@ -88,24 +88,20 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        Collection<ChessMove> moves = validMoves(move.getStartPosition());
-        currentColor = (currentColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
-        if(!moves.contains(move)){
-            throw new InvalidMoveException("illegal move");
-        }
         ChessPiece piece = board.getPiece(move.getStartPosition());
-
+        if (piece == null) {
+            throw new InvalidMoveException("no piece at start position");
+        }
         if (piece.getTeamColor() != currentColor) {
             throw new InvalidMoveException("wrong turn");
+        }
+        Collection<ChessMove> moves = validMoves(move.getStartPosition());
+        if(!moves.contains(move)){
+            throw new InvalidMoveException("illegal move");
         }
 
         board.addPiece(move.getEndPosition(), piece);
         board.addPiece(move.getStartPosition(), null);
-
-        ChessPiece opp = board.getPiece(move.getEndPosition());
-        if(opp != null && opp.getTeamColor() != currentColor){
-            board.addPiece(move.getEndPosition(), opp);
-        }
 
 
         if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
@@ -119,6 +115,8 @@ public class ChessGame {
             }
         }
 
+        currentColor = (currentColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+
 
     }
 
@@ -129,6 +127,9 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        return isInCheck(teamColor, board);
+    }
+    private boolean isInCheck(TeamColor teamColor, ChessBoard board) {
         ChessPosition king = null;
         for(int row  = 1; row <= 8; row++){
             for(int col = 1; col <= 8; col++){
@@ -218,9 +219,6 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        if (this.board == null){
-            throw new IllegalArgumentException("Already Set");
-        }
         this.board = board;
     }
 
@@ -231,5 +229,18 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ChessGame that = (ChessGame) obj;
+        return currentColor == that.currentColor && java.util.Objects.equals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(currentColor, board);
     }
 }
