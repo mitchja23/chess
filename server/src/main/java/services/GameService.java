@@ -12,8 +12,8 @@ public class GameService {
     private final GameDAO gameDAO;
     private final AuthDAO authDAO;
 
-    public GameService(GameDAO userDAO, AuthDAO authDAO) {
-        this.gameDAO = userDAO;
+    public GameService(GameDAO gameDAO, AuthDAO authDAO) {
+        this.gameDAO = gameDAO;
         this.authDAO = authDAO;
     }
 
