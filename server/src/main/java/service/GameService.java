@@ -60,9 +60,9 @@ public class GameService {
             throw new AlreadyTakenException("Error: Color taken");
         }
         if("WHITE".equals(request.playerColor())){
-            gameDAO.updateGame(new GameData(game.gameID(), auth.username(), null, game.gameName(), game.game()));
+            gameDAO.updateGame(new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game()));
         } else {
-            gameDAO.updateGame(new GameData(game.gameID(), null, auth.username(), game.gameName(), game.game()));
+            gameDAO.updateGame(new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game()));
         }
     }
 }
