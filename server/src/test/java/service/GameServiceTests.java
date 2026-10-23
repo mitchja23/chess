@@ -58,6 +58,14 @@ public class GameServiceTests {
     }
 
     @Test
+    @DisplayName("join game not found")
+    public void joinGameNotFound() {
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.joinGame("123", new Request.JoinGameRequest("WHITE", 999)),
+                "joined a game that does not exist");
+    }
+
+    @Test
     @DisplayName("color taken")
     public void joinGameAlreadyTaken() throws Exception {
         int gameID = service.createGame("123", new Request.CreateGameRequest("game")).gameID();

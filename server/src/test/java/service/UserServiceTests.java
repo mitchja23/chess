@@ -25,6 +25,30 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("register duplicate username")
+    public void registerAlreadyTaken() {
+        Assertions.assertThrows(AlreadyTakenException.class,
+                () -> service.register(existingUser),
+                "registered a taken username");
+    }
+
+    @Test
+    @DisplayName("register missing fields")
+    public void registerBadRequest() {
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.register(new Request.RegisterRequest("jacob3", null, "jacob3@mail.com")),
+                "registered with missing password");
+    }
+
+    @Test
+    @DisplayName("login missing fields")
+    public void loginBadRequest() {
+        Assertions.assertThrows(BadRequestException.class,
+                () -> service.login(new Request.LoginRequest("jacob", null)),
+                "logged in with missing password");
+    }
+
+    @Test
     @DisplayName("login")
     public void loginSuccess() throws Exception {
         var result = service.login(new Request.LoginRequest("jacob", "password"));
