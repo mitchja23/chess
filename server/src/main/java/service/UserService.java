@@ -5,6 +5,7 @@ import model.AuthData;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.UUID;
 
@@ -37,7 +38,7 @@ public class UserService {
             throw new BadRequestException("Enter Username and Password");
         }
         UserData user = userDAO.getUser(login.username());
-        if(user == null || !login.password().equals(user.password())){
+        if(user == null || !BCrypt.checkpw(login.password(), user.password())){
             throw new UnauthorizedException("Username or Password incorrect");
         }
         String token = UUID.randomUUID().toString();
