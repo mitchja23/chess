@@ -1,6 +1,9 @@
 package server;
 
 
+import dataaccess.sql.SqlAuthDAO;
+import dataaccess.sql.SqlGameDAO;
+import dataaccess.sql.SqlUserDAO;
 import service.*;
 import dataaccess.*;
 import com.google.gson.Gson;
@@ -18,13 +21,17 @@ public class Server {
     private final ClearService clearService;
 
     public Server() {
-        UserDAO userDAO = new MemoryUserDAO();
-        AuthDAO authDAO = new MemoryAuthDAO();
-        GameDAO gameDAO = new MemoryGameDAO();
+        try {
+            UserDAO userDAO = new SqlUserDAO();
+            AuthDAO authDAO = new SqlAuthDAO();
+            GameDAO gameDAO = new SqlGameDAO();
 
-        userService = new UserService(userDAO, authDAO);
-        gameService = new GameService(gameDAO, authDAO);
-        clearService = new ClearService(gameDAO, authDAO, userDAO);
+            userService = new UserService(userDAO, authDAO);
+            gameService = new GameService(gameDAO, authDAO);
+            clearService = new ClearService(gameDAO, authDAO, userDAO);
+        } catch (DataAccessException ex) {
+            throw new RuntimeException("failed use sqlDAOs", ex);
+        }
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
                 .post("/user", this::register)
