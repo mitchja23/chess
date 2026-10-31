@@ -70,10 +70,34 @@ public class ChessPiece {
         return moves;
     }
 
-    private void kingMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
-        int[][] directions = {
-                {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
-        };
+    private void whileMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int[][] directions){
+        for (int[] direction : directions){
+            int row = myPosition.getRow();
+            int col = myPosition.getColumn();
+
+            while(true) {
+                row += direction[0];
+                col += direction[1];
+                ChessPosition newPosition = new ChessPosition(row,col);
+
+                if (offBoard(newPosition)){
+                    break;
+                }
+                if(openSpace(board, newPosition)){
+                    moves.add(new ChessMove(myPosition, newPosition,null));
+                }
+                else if (otherColor(board, newPosition)){
+                    moves.add(new ChessMove(myPosition, newPosition,null));
+                    break;
+                }
+                else{
+                    break;
+                }
+            }
+        }
+    }
+
+    private void forMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int[][] directions){
         for (int[] direction : directions){
             int row = myPosition.getRow() + direction[0];
             int col = myPosition.getColumn() + direction[1];
@@ -90,114 +114,39 @@ public class ChessPiece {
         }
     }
 
+    private void kingMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
+        int[][] directions = {
+                {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
+        };
+        forMoves(board, myPosition, moves, directions);
+    }
+
     private void queenMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
         int[][] directions ={
                 {1, 0}, {-1, 0}, {0, 1}, {0, -1},{1, 1}, {1, -1}, {-1, 1}, {-1, -1}
         };
-        for (int[] direction : directions){
-            int row = myPosition.getRow();
-            int col = myPosition.getColumn();
-
-            while(true) {
-                row += direction[0];
-                col += direction[1];
-                ChessPosition newPosition = new ChessPosition(row,col);
-
-                if (offBoard(newPosition)){
-                    break;
-                }
-                if(openSpace(board, newPosition)){
-                    moves.add(new ChessMove(myPosition, newPosition,null));
-                }
-                else if (otherColor(board, newPosition)){
-                    moves.add(new ChessMove(myPosition, newPosition,null));
-                    break;
-                }
-                else{
-                    break;
-                }
-            }
-        }
+        whileMoves(board, myPosition, moves, directions);
     }
 
     private void bishopMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
         int [][] directions = {
                 {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
         };
-        for (int[] direction : directions){
-            int row = myPosition.getRow();
-            int col = myPosition.getColumn();
-
-            while(true) {
-                row += direction[0];
-                col += direction[1];
-                ChessPosition newPosition = new ChessPosition(row,col);
-
-                if (offBoard(newPosition)){
-                    break;
-                }
-                if(openSpace(board, newPosition)){
-                    moves.add(new ChessMove(myPosition, newPosition,null));
-                }
-                else if (otherColor(board, newPosition)){
-                    moves.add(new ChessMove(myPosition, newPosition,null));
-                    break;
-                }
-                else{
-                    break;
-                }
-            }
-        }
+        whileMoves(board, myPosition, moves, directions);
     }
 
     private void rookMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
         int [][] directions = {
                 {1, 0}, {-1, 0}, {0, 1}, {0, -1}
         };
-        for (int[] direction : directions){
-            int row = myPosition.getRow();
-            int col = myPosition.getColumn();
-
-            while(true) {
-                row += direction[0];
-                col += direction[1];
-                ChessPosition newPosition = new ChessPosition(row,col);
-
-                if (offBoard(newPosition)){
-                    break;
-                }
-                if(openSpace(board, newPosition)){
-                    moves.add(new ChessMove(myPosition, newPosition,null));
-                }
-                else if (otherColor(board, newPosition)){
-                    moves.add(new ChessMove(myPosition, newPosition,null));
-                    break;
-                }
-                else{
-                    break;
-                }
-            }
-        }
+        whileMoves(board, myPosition, moves, directions);
     }
 
     private void knightMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
         int[][] directions = {
                 {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}
         };
-        for (int[] direction : directions){
-            int row = myPosition.getRow() + direction[0];
-            int col = myPosition.getColumn() + direction[1];
-            ChessPosition newPosition = new ChessPosition(row,col);
-            if(offBoard(newPosition)) {
-                continue;
-            }
-            if(openSpace(board, newPosition)){
-                moves.add(new ChessMove(myPosition, newPosition,null));
-            }
-            else if (otherColor(board, newPosition)){
-                moves.add(new ChessMove(myPosition, newPosition, null));
-            }
-        }
+        forMoves(board, myPosition, moves, directions);
     }
 
     private void pawnMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
