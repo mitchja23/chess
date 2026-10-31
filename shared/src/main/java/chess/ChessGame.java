@@ -233,8 +233,12 @@ public class ChessGame {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         ChessGame that = (ChessGame) obj;
         return currentColor == that.currentColor && java.util.Objects.equals(board, that.board);
     }

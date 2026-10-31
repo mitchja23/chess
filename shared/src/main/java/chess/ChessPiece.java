@@ -223,7 +223,9 @@ public class ChessPiece {
                 new ChessPosition(myPosition.getRow() + col, myPosition.getColumn() +1)
         };
         for (ChessPosition position : diagonal){
-            if(offBoard(position)) continue;
+            if(offBoard(position)) {
+                continue;
+            }
             if(otherColor(board, position)){
                 if (position.getRow() == promotion){
                     promoMoves(myPosition, position, moves);
@@ -261,8 +263,12 @@ public class ChessPiece {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         ChessPiece that = (ChessPiece) obj;
         return pieceColor == that.pieceColor && type == that.type;
     }

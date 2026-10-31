@@ -17,7 +17,8 @@ public class GameService {
         this.authDAO = authDAO;
     }
 
-    public Results.CreateGameResult createGame(String authToken, Request.CreateGameRequest request) throws UnauthorizedException, BadRequestException, DataAccessException {
+    public Results.CreateGameResult createGame(String authToken, Request.CreateGameRequest request)
+            throws UnauthorizedException, BadRequestException, DataAccessException {
         if(authDAO.getAuth(authToken) == null){
             throw new UnauthorizedException("You are not authorized to create a game");
         }
@@ -41,7 +42,8 @@ public class GameService {
         return new Results.ListGamesResult(games);
     }
 
-    public void joinGame(String authToken, Request.JoinGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
+    public void joinGame(String authToken, Request.JoinGameRequest request)
+            throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
         AuthData auth = authDAO.getAuth(authToken);
         if(auth == null){
             throw new UnauthorizedException("You are not authorized to join a game");
@@ -56,7 +58,8 @@ public class GameService {
         if(game == null){
             throw new BadRequestException("game not found");
         }
-        if(("WHITE".equals(request.playerColor()) && game.whiteUsername() != null) || ("BLACK".equals(request.playerColor()) && game.blackUsername() != null)){
+        if(("WHITE".equals(request.playerColor()) && game.whiteUsername() != null)
+                || ("BLACK".equals(request.playerColor()) && game.blackUsername() != null)){
             throw new AlreadyTakenException("Color taken");
         }
         if("WHITE".equals(request.playerColor())){
