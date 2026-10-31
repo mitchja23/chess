@@ -2,11 +2,8 @@ package dataaccess.sql;
 
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseConnector;
-import dataaccess.DatabaseManager;
 import dataaccess.UserDAO;
 import model.UserData;
-
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
 
