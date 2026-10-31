@@ -4,10 +4,10 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseConnector;
-import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
 import model.GameData;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -26,6 +26,15 @@ public class SqlGameDAO implements GameDAO {
             PRIMARY KEY (gameID)
                         )""";
         DatabaseConnector.createTable(createTable);
+    }
+
+    private GameData gameInfo(ResultSet results) throws SQLException{
+        var gameId = results.getInt("gameID");
+        var white = results.getString("white");
+        var black = results.getString("black");
+        var gameName = results.getString("gameName");
+        var game = new Gson().fromJson(results.getString("game"), ChessGame.class);
+        return new GameData(gameId, white, black, gameName, game);
     }
 
 
@@ -66,7 +75,7 @@ public class SqlGameDAO implements GameDAO {
             currentGame.setInt(1, id);
             try (var queryResult = currentGame.executeQuery()) {
                 if (queryResult.next()) {
-                    return new GameData(queryResult.getInt("gameID"), queryResult.getString("white"), queryResult.getString("black"), queryResult.getString("gameName"), new Gson().fromJson(queryResult.getString("game"), ChessGame.class));
+                    return gameInfo(queryResult);
                 } else {
                     return null;
                 }
@@ -112,7 +121,7 @@ public class SqlGameDAO implements GameDAO {
 
             try (var queryResult = listedGame.executeQuery()) {
                 while (queryResult.next()) {
-                    listedGames.add(new GameData(queryResult.getInt("gameID"), queryResult.getString("white"), queryResult.getString("black"), queryResult.getString("gameName"), new Gson().fromJson(queryResult.getString("game"), ChessGame.class)));
+                    listedGames.add(gameInfo(queryResult));
                 }
             }
         } catch (SQLException ex) {
