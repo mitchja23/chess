@@ -3,6 +3,7 @@ package dataaccess.sql;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import dataaccess.DatabaseConnector;
 import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
 import model.GameData;
@@ -25,7 +26,7 @@ public class SqlGameDAO implements GameDAO {
             game TEXT NOT NULL,
             PRIMARY KEY (gameID)
                         )""";
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var newGame = connect.prepareStatement(createTable)) {
             newGame.executeUpdate();
         } catch (SQLException ex) {
@@ -42,7 +43,7 @@ public class SqlGameDAO implements GameDAO {
                 VALUES (?,?)
                 """;
 
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var newGame = connect.prepareStatement(createGame, Statement.RETURN_GENERATED_KEYS)) {
             newGame.setString(1, game);
             newGame.setString(2, new Gson().toJson(new ChessGame()));
@@ -66,7 +67,7 @@ public class SqlGameDAO implements GameDAO {
                 FROM game
                 WHERE gameID = ?
                 """;
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var currentGame = connect.prepareStatement(getGame)) {
             currentGame.setInt(1, id);
             try (var queryResult = currentGame.executeQuery()) {
@@ -88,7 +89,7 @@ public class SqlGameDAO implements GameDAO {
                 SET white = ?, black = ?, gameName = ?, game = ?
                 WHERE gameID = ?
                 """;
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var putGame = connect.prepareStatement(updateGame)) {
 
 
@@ -111,7 +112,7 @@ public class SqlGameDAO implements GameDAO {
                 FROM game
                 """;
         var listedGames = new ArrayList<GameData>();
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var listedGame = connect.prepareStatement(listGame)) {
 
 
@@ -134,7 +135,7 @@ public class SqlGameDAO implements GameDAO {
         var clearGame = """
                 DELETE FROM game
                 """;
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var wipeGame = connect.prepareStatement(clearGame)) {
             wipeGame.executeUpdate();
         } catch (SQLException ex) {

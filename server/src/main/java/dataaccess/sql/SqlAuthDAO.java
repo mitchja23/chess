@@ -2,6 +2,7 @@ package dataaccess.sql;
 
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
+import dataaccess.DatabaseConnector;
 import dataaccess.DatabaseManager;
 import model.AuthData;
 
@@ -18,7 +19,7 @@ public class SqlAuthDAO implements AuthDAO {
             username VARCHAR(255) NOT NULL,
             PRIMARY KEY (authToken)
                         )""";
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var newTable = connect.prepareStatement(createTable)) {
             newTable.executeUpdate();
         } catch (SQLException ex) {
@@ -33,7 +34,7 @@ public class SqlAuthDAO implements AuthDAO {
                 VALUES (?,?)
                 """;
 
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var newAuth = connect.prepareStatement(createAuth)) {
             newAuth.setString(1,auth.authToken());
             newAuth.setString(2,auth.username());
@@ -51,7 +52,7 @@ public class SqlAuthDAO implements AuthDAO {
                 FROM auth
                 WHERE authToken = ?
                 """;
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var currentAuth = connect.prepareStatement(getAuth)) {
             currentAuth.setString(1, authToken);
             try (var queryResult = currentAuth.executeQuery()) {
@@ -72,7 +73,7 @@ public class SqlAuthDAO implements AuthDAO {
                 DELETE FROM auth
                 WHERE authToken = ?
                 """;
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var delAuth = connect.prepareStatement(deleteAuth)) {
             delAuth.setString(1,authToken);
             delAuth.executeUpdate();
@@ -87,7 +88,7 @@ public class SqlAuthDAO implements AuthDAO {
         var clearAuth = """
                 DELETE FROM auth
                 """;
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var wipeAuth = connect.prepareStatement(clearAuth)) {
             wipeAuth.executeUpdate();
         } catch (SQLException ex) {

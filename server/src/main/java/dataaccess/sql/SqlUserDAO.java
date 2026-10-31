@@ -1,6 +1,7 @@
 package dataaccess.sql;
 
 import dataaccess.DataAccessException;
+import dataaccess.DatabaseConnector;
 import dataaccess.DatabaseManager;
 import dataaccess.UserDAO;
 import model.UserData;
@@ -20,7 +21,7 @@ public class SqlUserDAO implements UserDAO {
             email VARCHAR(255) NOT NULL,
             PRIMARY KEY (username)
         )""";
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var newTable = connect.prepareStatement(createTable)) {
             newTable.executeUpdate();
         } catch (SQLException ex) {
@@ -38,7 +39,7 @@ public class SqlUserDAO implements UserDAO {
 
 
 
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var newUser = connect.prepareStatement(createUser)) {
             newUser.setString(1,user.username());
             newUser.setString(2,hashedPass);
@@ -56,7 +57,7 @@ public class SqlUserDAO implements UserDAO {
                 FROM user
                 WHERE username = ?
                 """;
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var currentUser = connect.prepareStatement(getUser)) {
             currentUser.setString(1, username);
             try (var queryResult = currentUser.executeQuery()) {
@@ -76,7 +77,7 @@ public class SqlUserDAO implements UserDAO {
         var clearUser = """
                 DELETE FROM user
                 """;
-        try (var connect = DatabaseManager.getConnection();
+        try (var connect = DatabaseConnector.getConnection();
              var deleteUser = connect.prepareStatement(clearUser)) {
             deleteUser.executeUpdate();
         } catch (SQLException ex) {
