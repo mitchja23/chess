@@ -13,7 +13,6 @@ import org.mindrot.jbcrypt.BCrypt;
 public class SqlUserDAO implements UserDAO {
 
     public SqlUserDAO() throws DataAccessException{
-        DatabaseManager.createDatabase();
         var createTable = """
         CREATE TABLE IF NOT EXISTS user (
             username VARCHAR(255) NOT NULL,
@@ -21,12 +20,7 @@ public class SqlUserDAO implements UserDAO {
             email VARCHAR(255) NOT NULL,
             PRIMARY KEY (username)
         )""";
-        try (var connect = DatabaseConnector.getConnection();
-             var newTable = connect.prepareStatement(createTable)) {
-            newTable.executeUpdate();
-        } catch (SQLException ex) {
-            throw new DataAccessException("could not make table", ex);
-        }
+        DatabaseConnector.createTable(createTable);
     }
 
     @Override

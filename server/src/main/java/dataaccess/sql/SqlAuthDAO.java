@@ -12,19 +12,13 @@ import java.sql.SQLException;
 public class SqlAuthDAO implements AuthDAO {
 
     public SqlAuthDAO() throws DataAccessException{
-        DatabaseManager.createDatabase();
         var createTable = """
         CREATE TABLE IF NOT EXISTS auth(
             authToken VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,
             PRIMARY KEY (authToken)
                         )""";
-        try (var connect = DatabaseConnector.getConnection();
-             var newTable = connect.prepareStatement(createTable)) {
-            newTable.executeUpdate();
-        } catch (SQLException ex) {
-            throw new DataAccessException("could not make table", ex);
-        }
+        DatabaseConnector.createTable(createTable);
     }
 
     @Override

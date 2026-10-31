@@ -16,7 +16,6 @@ import java.util.Collection;
 public class SqlGameDAO implements GameDAO {
 
     public SqlGameDAO() throws DataAccessException{
-        DatabaseManager.createDatabase();
         var createTable = """
         CREATE TABLE IF NOT EXISTS game(
             gameID INT NOT NULL AUTO_INCREMENT,
@@ -26,12 +25,7 @@ public class SqlGameDAO implements GameDAO {
             game TEXT NOT NULL,
             PRIMARY KEY (gameID)
                         )""";
-        try (var connect = DatabaseConnector.getConnection();
-             var newGame = connect.prepareStatement(createTable)) {
-            newGame.executeUpdate();
-        } catch (SQLException ex) {
-            throw new DataAccessException("could not make game", ex);
-        }
+        DatabaseConnector.createTable(createTable);
     }
 
 
