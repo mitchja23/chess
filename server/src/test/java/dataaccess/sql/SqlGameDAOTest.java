@@ -3,6 +3,8 @@ package dataaccess.sql;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
+import chess.ChessMove;
+import chess.ChessPosition;
 
 
 import model.GameData;
@@ -33,6 +35,7 @@ public class SqlGameDAOTest {
         Assertions.assertNull(result.whiteUsername(), "White username it not empty");
         Assertions.assertNull(result.blackUsername(), "Black username it not empty");
         Assertions.assertNotNull(result.game(), "failed to create game");
+        Assertions.assertEquals(new ChessGame(), result.game(), "board was not stored");
     }
 
     @Test
@@ -63,12 +66,17 @@ public class SqlGameDAOTest {
     @DisplayName("updateGame")
     public void updateGame() throws Exception {
         var data = gameDAO.createGame("game");
-        var game = new GameData(data,"jacob", "mitch", "game", new ChessGame());
+        var newGame = new ChessGame();
+        newGame.makeMove(new ChessMove(new ChessPosition(2,5), new ChessPosition(3,5), null));
+
+        var game = new GameData(data,"jacob", "mitch", "game", newGame);
         gameDAO.updateGame(game);
 
         var result = gameDAO.getGame(data);
         Assertions.assertEquals("jacob",result.whiteUsername(), "White username not updated");
         Assertions.assertEquals("mitch",result.blackUsername(), "Black username not updated");
+        Assertions.assertNotNull(result.game().getBoard().getPiece(new ChessPosition(3,5)), "failed to move");
+        Assertions.assertEquals(newGame,result.game(), "board was not updated");
     }
 
     @Test
