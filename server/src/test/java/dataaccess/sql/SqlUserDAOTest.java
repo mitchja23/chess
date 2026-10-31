@@ -57,7 +57,7 @@ public class SqlUserDAOTest {
     @DisplayName("getUserBad")
     public void getUserBad() throws Exception {
         var result = userDAO.getUser("jacob");
-        Assertions.assertNull(result, "User does not exist");
+        Assertions.assertNull(result, "Returned a user does not exist");
     }
 
     @Test
