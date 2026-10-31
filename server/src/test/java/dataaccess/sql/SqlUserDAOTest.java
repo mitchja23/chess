@@ -63,8 +63,13 @@ public class SqlUserDAOTest {
     @Test
     @DisplayName("clear")
     public void clear() throws Exception {
+        var user1 = new UserData("jacob1", "pass", "jacob1@gmail.com");
+        var user2 = new UserData("jacob2", "pass", "jacob2@gmail.com");
+        userDAO.createUser(user1);
+        userDAO.createUser(user2);
         userDAO.clear();
-        Assertions.assertNull(userDAO.getUser("jacob"),"user was not cleared");
+        Assertions.assertNull(userDAO.getUser("jacob1"),"user was not cleared");
+        Assertions.assertNull(userDAO.getUser("jacob2"),"user was not cleared");
     }
 
 }
