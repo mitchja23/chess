@@ -27,12 +27,17 @@ public class ServerFacade {
         this.serverUrl = serverUrl;
     }
 
-    private HttpResponse<String> makeRequest(String method, String path, String body) throws ResponseErrors {
+    private HttpResponse<String> makeRequest(String method, String path, String body, String authToken) throws ResponseErrors {
         String url =  serverUrl + path;
         try {
-            var request = HttpRequest.newBuilder(URI.create(url))
-                    .method(method, requestBodyPublisher(body))
-                    .build();
+            var buildRequest = HttpRequest.newBuilder(URI.create(url))
+                    .method(method, requestBodyPublisher(body));
+            HttpRequest request;
+            if (authToken == null) {
+                request = buildRequest.build();
+            } else {
+                request = buildRequest.header("authorization", authToken).build();
+            }
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             return response;
         } catch (IOException | InterruptedException ex) {
@@ -49,13 +54,24 @@ public class ServerFacade {
     }
 
     public void clear() throws ResponseErrors{
-        makeRequest("DELETE", "/db", null);
+        makeRequest("DELETE", "/db", null, null);
     }
 
     public AuthData register(String username, String password, String email) throws ResponseErrors{
         var data = gson.toJson(new UserData(username, password, email));
-        var response = makeRequest("POST", "/user", data);
+        var response = makeRequest("POST", "/user", data, null);
         AuthData authResponse = gson.fromJson(response.body(), AuthData.class);
         return authResponse;
+    }
+
+    public AuthData login(String username, String password) throws ResponseErrors{
+        var data = gson.toJson(new UserData(username, password, null));
+        var response = makeRequest("POST", "/session", data, null);
+        AuthData authResponse = gson.fromJson(response.body(), AuthData.class);
+        return authResponse;
+    }
+
+    public void logout(String authToken) throws ResponseErrors{
+        makeRequest("DELETE", "/session", null, authToken);
     }
 }
