@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.util.Map;
+import java.util.List;
 
 import model.GameData;
 import model.UserData;
@@ -22,6 +23,7 @@ public class ServerFacade {
 
     private final Gson gson = new Gson();
     private final String serverUrl;
+    private record GameList(List<GameData> games){};
 
     public ServerFacade(int port) {
         this("http://localhost:" + port);
@@ -85,5 +87,11 @@ public class ServerFacade {
         var response = makeRequest("POST", "/game", data, authToken);
         GameData gameResponse = gson.fromJson(response.body(), GameData.class);
         return gameResponse.gameID();
+    }
+
+    public List<GameData> listGames(String authToken) throws ResponseErrors{
+        var response = makeRequest("GET", "/game", null, authToken);
+        GameList gameResponse = gson.fromJson(response.body(), GameList.class);
+        return gameResponse.games();
     }
 }
