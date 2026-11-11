@@ -94,4 +94,11 @@ public class ServerFacade {
         GameList gameResponse = gson.fromJson(response.body(), GameList.class);
         return gameResponse.games();
     }
+
+    public void joinGame(String authToken, String playerColor, int gameID) throws ResponseErrors{
+        var body = Map.of("playerColor", playerColor, "gameID", gameID);
+        var data = gson.toJson(body);
+        makeRequest("PUT", "/game", data, authToken);
+    }
+
 }
