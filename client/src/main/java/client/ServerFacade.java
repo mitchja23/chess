@@ -10,7 +10,11 @@ import java.net.http.HttpResponse;
 import java.io.IOException;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
+import java.util.Map;
+
+import model.GameData;
 import model.UserData;
+
 
 
 public class ServerFacade {
@@ -73,5 +77,13 @@ public class ServerFacade {
 
     public void logout(String authToken) throws ResponseErrors{
         makeRequest("DELETE", "/session", null, authToken);
+    }
+
+    public int createGame(String authToken, String gameName) throws ResponseErrors{
+        var body = Map.of("gameName", gameName);
+        var data = gson.toJson(body);
+        var response = makeRequest("POST", "/game", data, authToken);
+        GameData gameResponse = gson.fromJson(response.body(), GameData.class);
+        return gameResponse.gameID();
     }
 }
