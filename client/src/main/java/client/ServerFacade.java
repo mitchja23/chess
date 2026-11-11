@@ -45,7 +45,11 @@ public class ServerFacade {
                 request = buildRequest.header("authorization", authToken).build();
             }
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response;
+            if (response.statusCode() >= 200 && response.statusCode() < 300){
+                return response;
+            }else {
+                 throw new ResponseErrors("Error" + response.statusCode());
+            }
         } catch (IOException | InterruptedException ex) {
             throw new ResponseErrors("Could not make request", ex);
         }
