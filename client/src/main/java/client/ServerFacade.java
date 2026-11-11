@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import model.AuthData;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -9,7 +10,8 @@ import java.net.http.HttpResponse;
 import java.io.IOException;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpResponse.BodyHandlers;
+import model.UserData;
+
 
 public class ServerFacade {
     private static final HttpClient client = HttpClient.newHttpClient();
@@ -48,5 +50,12 @@ public class ServerFacade {
 
     public void clear() throws ResponseErrors{
         makeRequest("DELETE", "/db", null);
+    }
+
+    public AuthData register(String username, String password, String email) throws ResponseErrors{
+        var data = gson.toJson(new UserData(username, password, email));
+        var response = makeRequest("POST", "/user", data);
+        AuthData authResponse = gson.fromJson(response.body(), AuthData.class);
+        return authResponse;
     }
 }
