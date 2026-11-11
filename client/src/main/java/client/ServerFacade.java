@@ -2,10 +2,13 @@ package client;
 
 import com.google.gson.Gson;
 
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class ServerFacade {
-    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    private static final HttpClient client = HttpClient.newHttpClient();
 
     private final Gson gson = new Gson();
     private final String serverUrl;
@@ -17,4 +20,12 @@ public class ServerFacade {
     public ServerFacade(String serverUrl) {
         this.serverUrl = serverUrl;
     }
+
+    private HttpResponse<String> makeRequest(String method, String path) throws Exception{
+        String url =  serverUrl + path;
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url)).method(method, HttpRequest.BodyPublishers.noBody()).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response;
+    }
+
 }
