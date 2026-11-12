@@ -76,7 +76,7 @@ public class BoardUI {
     }
 
     private static void makeRow(ChessBoard board, int row, String color){
-        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + " " + row + " ");
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + " " + row + " " + EscapeSequences.SET_TEXT_COLOR_BLACK);
         if(color.equals("WHITE")){
             for(int col = 1; col <= 8; col++){
                 colors(board,row, col);
@@ -86,7 +86,7 @@ public class BoardUI {
                 colors(board,row, col);
             }
         }
-        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + " " + row + " ");
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + " " + row + " " + EscapeSequences.SET_TEXT_COLOR_BLACK);
         System.out.print(EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR);
         System.out.println();
     }
@@ -103,6 +103,20 @@ public class BoardUI {
         System.out.print(EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR);
         System.out.println();
 
+    }
+
+    public static void createBoard(ChessBoard board, String color){
+        rowLabels(color);
+        if (color.equals("WHITE")){
+            for(int row = 8; row >= 1; row--){
+                makeRow(board, row, color);
+            }
+        }else{
+            for(int row = 1; row <= 8; row++){
+                makeRow(board, row, color);
+            }
+        }
+        rowLabels(color);
     }
 
 }
