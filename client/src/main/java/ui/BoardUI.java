@@ -1,7 +1,9 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
+import chess.ChessPosition;
 
 public class BoardUI {
     private static String icon(ChessPiece chessPiece){
@@ -49,5 +51,27 @@ public class BoardUI {
             }
         }
         return EscapeSequences.EMPTY;
+    }
+
+    private static void colors(ChessBoard board, int row, int col){
+        var piece = board.getPiece(new ChessPosition(row, col));
+        String boardColor;
+        String playerColor;
+        if((row + col) %2 != 0){
+            boardColor = EscapeSequences.SET_BG_COLOR_GREEN;
+        }else{
+            boardColor = EscapeSequences.SET_BG_COLOR_DARK_GREEN;
+        }
+        if(piece != null){
+            if(piece.getTeamColor() == ChessGame.TeamColor.WHITE){
+                playerColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
+            }else{
+                playerColor = EscapeSequences.SET_TEXT_COLOR_BLACK;
+            }
+        }else{
+            playerColor = EscapeSequences.SET_TEXT_COLOR_MAGENTA;
+        }
+        System.out.print(boardColor + playerColor + icon(piece));
+
     }
 }
