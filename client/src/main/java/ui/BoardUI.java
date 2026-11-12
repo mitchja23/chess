@@ -74,4 +74,21 @@ public class BoardUI {
         System.out.print(boardColor + playerColor + icon(piece));
 
     }
+
+    private static void makeRow(ChessBoard board, int row, String color){
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + " " + row + " ");
+        if(color.equals("WHITE")){
+            for(int col = 1; col <= 8; col++){
+                colors(board,row, col);
+            }
+        }else{
+            for(int col = 8; col >= 1; col--){
+                colors(board,row, col);
+            }
+        }
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + " " + row + " ");
+        System.out.print(EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println();
+    }
+
 }
