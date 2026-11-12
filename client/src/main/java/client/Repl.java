@@ -13,6 +13,19 @@ public class Repl {
         SIGNEDIN, SIGNEDOUT, QUIT
     }
     private void handlePreLogin(String input){
+        if(input.equalsIgnoreCase("quit")){
+            state = State.QUIT;
+        }else if(input.equalsIgnoreCase("help")){
+            System.out.println("register <USERNAME> <PASSWORD> <EMAIL>");
+            System.out.println("login <USERNAME> <PASSWORD>");
+            System.out.println("quit: quits application");
+            System.out.println("help: command list");
+
+        }
+        else{
+            System.out.println("Unknown Command");
+        }
+
 
     }
     private void handlePostLogin(String input){
