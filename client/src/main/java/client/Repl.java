@@ -1,6 +1,10 @@
 package client;
+import chess.ChessBoard;
 import model.AuthData;
+import model.GameData;
+import ui.BoardUI;
 
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -9,6 +13,7 @@ public class Repl {
     private final Scanner scanner = new Scanner(System.in);
     private State state = State.SIGNEDOUT;
     private String token;
+    private List<GameData> games;
 
     public Repl(String url){
         server =  new ServerFacade(url);
@@ -54,10 +59,106 @@ public class Repl {
         }else{
             System.out.println("Unknown Command");
         }
-
-
     }
+
+
     private void handlePostLogin(String input){
+        String[] words = input.split(" ");
+        if(words[0].equalsIgnoreCase("quit")){
+            state = State.QUIT;
+        }else if(words[0].equalsIgnoreCase("help")){
+            System.out.println("create: <NAME>");
+            System.out.println("list:");
+            System.out.println("join: <ID> white|black");
+            System.out.println("observe: <ID>");
+            System.out.println("logout: ");
+            System.out.println("help: command list");
+            System.out.println("quit: quits application");
+
+        }else if(words[0].equalsIgnoreCase("logout")){
+            try{
+                server.logout(token);
+                token = null;
+                state = State.SIGNEDOUT;
+                System.out.println("logged out!");
+            }catch (ResponseErrors e){
+                System.out.println("Failed to logout");
+            }
+        }else if(words[0].equalsIgnoreCase("create")){
+            if(words.length == 2){
+                try{
+                    server.createGame(token,words[1]);
+                    System.out.println("Created game " + words[1]);
+                }catch (ResponseErrors e){
+                    System.out.println("Could not create Game.");
+                }
+            }else{
+                System.out.println("create: <NAME>");
+            }
+        }else if(words[0].equalsIgnoreCase("list")) {
+            if (words.length == 1) {
+                try{
+                    games = server.listGames(token);
+                    if(games.isEmpty()){
+                        System.out.println("No current games");
+                    }
+                    for(int i = 0; i < games.size(); i++){
+
+                        GameData game = games.get(i);
+                        System.out.println("Game " + (i+1) + ". " + game.gameName() + " White: " + game.whiteUsername() + " Black: " + game.blackUsername());
+                    }
+
+                }catch (ResponseErrors e){
+                    System.out.println("Could not list games.");
+                }
+            } else {
+                System.out.println("List:");
+            }
+        }else if(words[0].equalsIgnoreCase("join")){
+            if(words.length == 3){
+                try{
+                    int selectedGame = Integer.parseInt(words[1]);
+                    if(games == null || selectedGame <1 || selectedGame > games.size()){
+                        System.out.println("Invalid game");
+                        return;
+                    }
+                    server.joinGame(token, words[2].toUpperCase(), games.get(selectedGame - 1).gameID());
+                    ChessBoard board = new ChessBoard();
+                    board.resetBoard();
+                    BoardUI.createBoard(board, words[2].toUpperCase());
+                }catch (NumberFormatException e){
+                    System.out.println("Game must be a number.");
+                } catch (ResponseErrors e) {
+                    System.out.println("Could not join game.");
+                }
+            } else {
+                System.out.println("Usage: join <ID> <WHITE|BLACK>");
+            }
+        }else if(words[0].equalsIgnoreCase("observe")){
+            if(words.length == 2){
+                try{
+                    int selectedGame = Integer.parseInt(words[1]);
+                    if(games == null || selectedGame <1 || selectedGame > games.size()){
+                        System.out.println("Invalid game");
+                        return;
+                    }
+                    ChessBoard board = new ChessBoard();
+                    board.resetBoard();
+                    BoardUI.createBoard(board, "WHITE");
+                }catch (NumberFormatException e){
+                    System.out.println("Game must be a number.");
+                }
+            } else {
+                System.out.println("Usage: observe <ID>");
+            }
+        }
+
+
+
+
+        else{
+            System.out.println("Unknown Command");
+        }
 
     }
 
