@@ -21,6 +21,10 @@ public class Repl {
     private enum State{
         SIGNEDIN, SIGNEDOUT, QUIT
     }
+    private String openGame(String username){
+        return username == null ? "open" : username;
+    }
+
     private void handlePreLogin(String input){
         String[] words = input.split(" ");
         if(words[0].equalsIgnoreCase("quit")){
@@ -37,6 +41,7 @@ public class Repl {
                     AuthData data = server.register(words[1],words[2],words[3]);
                     token = data.authToken();
                     state = State.SIGNEDIN;
+                    System.out.println("Registered!");
                 }catch (ResponseErrors e){
                     System.out.println("Could not register.");
                 }
@@ -69,8 +74,8 @@ public class Repl {
         }else if(words[0].equalsIgnoreCase("help")){
             System.out.println("create: <NAME>");
             System.out.println("list:");
-            System.out.println("join: <ID> white|black");
-            System.out.println("observe: <ID>");
+            System.out.println("join: <NUMBER> white|black");
+            System.out.println("observe: <NUMBER>");
             System.out.println("logout: ");
             System.out.println("help: command list");
             System.out.println("quit: quits application");
@@ -99,13 +104,14 @@ public class Repl {
             if (words.length == 1) {
                 try{
                     games = server.listGames(token);
+
                     if(games.isEmpty()){
                         System.out.println("No current games");
                     }
                     for(int i = 0; i < games.size(); i++){
 
                         GameData game = games.get(i);
-                        System.out.println("Game " + (i+1) + ". " + game.gameName() + " White: " + game.whiteUsername() + " Black: " + game.blackUsername());
+                        System.out.println("Game " + (i+1) + ". " + game.gameName() + " White: " + openGame(game.whiteUsername()) + " Black: " + openGame(game.blackUsername()));
                     }
 
                 }catch (ResponseErrors e){
@@ -132,7 +138,7 @@ public class Repl {
                     System.out.println("Could not join game.");
                 }
             } else {
-                System.out.println("Usage: join <ID> <WHITE|BLACK>");
+                System.out.println("Usage: join <NUMBER> <WHITE|BLACK>");
             }
         }else if(words[0].equalsIgnoreCase("observe")){
             if(words.length == 2){
@@ -149,7 +155,7 @@ public class Repl {
                     System.out.println("Game must be a number.");
                 }
             } else {
-                System.out.println("Usage: observe <ID>");
+                System.out.println("Usage: observe <NUMBER>");
             }
         }
 

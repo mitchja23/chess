@@ -50,7 +50,7 @@ public class ServerFacade {
             }else {
                  throw new ResponseErrors("Error" + response.statusCode());
             }
-        } catch (IOException | InterruptedException ex) {
+        } catch (IOException | InterruptedException | IllegalArgumentException ex) {
             throw new ResponseErrors("Could not make request", ex);
         }
     }
