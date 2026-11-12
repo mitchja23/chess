@@ -91,4 +91,18 @@ public class BoardUI {
         System.out.println();
     }
 
+    private static void rowLabels(String color){
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK );
+        String whiteRows = "    a  b  c  d  e  f  g  h    ";
+        String blackRows = "    h  g  f  e  d  c  b  a    ";
+        if (color.equals("WHITE")){
+            System.out.print(whiteRows);
+        }else{
+            System.out.print(blackRows);
+        }
+        System.out.print(EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println();
+
+    }
+
 }
