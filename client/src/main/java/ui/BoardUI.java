@@ -76,7 +76,7 @@ public class BoardUI {
     }
 
     private static void makeRow(ChessBoard board, int row, String color){
-        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + " " + row + " " + EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY  + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + row + " ");
         if(color.equals("WHITE")){
             for(int col = 1; col <= 8; col++){
                 colors(board,row, col);
@@ -86,15 +86,15 @@ public class BoardUI {
                 colors(board,row, col);
             }
         }
-        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + " " + row + " " + EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK  + " " + row + " ");
         System.out.print(EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR);
         System.out.println();
     }
 
     private static void rowLabels(String color){
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK );
-        String whiteRows = "    a  b  c  d  e  f  g  h    ";
-        String blackRows = "    h  g  f  e  d  c  b  a    ";
+        String whiteRows = "    a\u2003 b\u2003 c\u2003 d\u2003 e\u2003 f\u2003 g\u2003 h\u2003   ";
+        String blackRows = "    h\u2003 g\u2003 f\u2003 e\u2003 d\u2003 c\u2003 b\u2003 a\u2003   ";
         if (color.equals("WHITE")){
             System.out.print(whiteRows);
         }else{
