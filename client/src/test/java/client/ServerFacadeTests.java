@@ -67,6 +67,25 @@ public class ServerFacadeTests {
                 "Trying to login with incorrect password");
     }
 
+    @Test
+    @DisplayName("logoutGood")
+    public void logoutGood() throws ResponseErrors{
+        var data = facade.register("jacob", "pass", "jacob@gmail.com");
+        facade.logout(data.authToken());
+        Assertions.assertThrows(ResponseErrors.class, () -> facade.logout(data.authToken()),
+                "failed to logout");
+
+
+    }
+
+    @Test
+    @DisplayName("logoutBad")
+    public void logoutBad() throws ResponseErrors{
+        facade.register("jacob", "pass", "jacob@gmail.com");
+        Assertions.assertThrows(ResponseErrors.class, () -> facade.logout("bad"),
+                "Trying to logout wrong user");
+    }
+
 
 
 
