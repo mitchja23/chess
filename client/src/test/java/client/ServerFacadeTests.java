@@ -143,6 +143,15 @@ public class ServerFacadeTests {
                 "joined a color already taken");
     }
 
+    @Test
+    @DisplayName("clear")
+    public void clearTest() throws ResponseErrors{
+        var data = facade.register("jacob", "pass", "jacob@gmail.com");
+        facade.clear();
+        Assertions.assertThrows(ResponseErrors.class, () -> facade.login("jacob", "pass"),
+                "user failed to clear");
+    }
+
 
 
 
