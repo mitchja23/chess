@@ -122,6 +122,27 @@ public class ServerFacadeTests {
                 "listed games with a bad token");
     }
 
+    @Test
+    @DisplayName("joinGameGood")
+    public void joinGameGood() throws ResponseErrors{
+        var data = facade.register("jacob", "pass", "jacob@gmail.com");
+        var game = facade.createGame(data.authToken(),"game2");
+
+        Assertions.assertDoesNotThrow(() -> facade.joinGame(data.authToken(), "WHITE", game), "failed to join games");
+
+
+    }
+
+    @Test
+    @DisplayName("joinGameBad")
+    public void joinGameBad() throws ResponseErrors{
+        var data = facade.register("jacob", "pass", "jacob@gmail.com");
+        var game = facade.createGame(data.authToken(),"game2");
+        facade.joinGame(data.authToken(), "WHITE", game);
+        Assertions.assertThrows(ResponseErrors.class, () -> facade.joinGame(data.authToken(), "WHITE", game),
+                "joined a color already taken");
+    }
+
 
 
 
