@@ -104,6 +104,24 @@ public class ServerFacadeTests {
                 "created game with a bad token");
     }
 
+    @Test
+    @DisplayName("listGameGood")
+    public void listGameGood() throws ResponseErrors{
+        var data = facade.register("jacob", "pass", "jacob@gmail.com");
+        var game1 = facade.createGame(data.authToken(),"game1");
+        var game2 = facade.createGame(data.authToken(),"game2");
+        Assertions.assertTrue(facade.listGames(data.authToken()).size() == 2, "failed to list games");
+
+
+    }
+
+    @Test
+    @DisplayName("listGameBad")
+    public void listGameBad() throws ResponseErrors{
+        Assertions.assertThrows(ResponseErrors.class, () -> facade.listGames("bad"),
+                "listed games with a bad token");
+    }
+
 
 
 
