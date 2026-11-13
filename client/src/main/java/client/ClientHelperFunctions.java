@@ -87,7 +87,9 @@ public class ClientHelperFunctions {
                 for(int i = 0; i < games.size(); i++){
 
                     GameData game = games.get(i);
-                    System.out.println("Game " + (i+1) + ". " + game.gameName() + " White: " + openGame(game.whiteUsername()) + " Black: " + openGame(game.blackUsername()));
+                    String white = openGame(game.whiteUsername());
+                    String black = openGame(game.blackUsername());
+                    System.out.println("Game " + (i+1) + ". " + game.gameName() + " White: " + white + " Black: " + black);
                 }
 
             }catch (ResponseErrors e){

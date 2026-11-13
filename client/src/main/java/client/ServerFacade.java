@@ -19,7 +19,7 @@ import model.UserData;
 
 
 public class ServerFacade {
-    private static final HttpClient client = HttpClient.newHttpClient();
+    private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     private final Gson gson = new Gson();
     private final String serverUrl;
@@ -44,7 +44,7 @@ public class ServerFacade {
             } else {
                 request = buildRequest.header("authorization", authToken).build();
             }
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() >= 200 && response.statusCode() < 300){
                 return response;
             }else {
