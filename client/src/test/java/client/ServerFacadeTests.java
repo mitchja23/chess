@@ -86,6 +86,26 @@ public class ServerFacadeTests {
                 "Trying to logout wrong user");
     }
 
+    @Test
+    @DisplayName("createGameGood")
+    public void createGameGood() throws ResponseErrors{
+        var data = facade.register("jacob", "pass", "jacob@gmail.com");
+        var game = facade.createGame(data.authToken(),"game");
+        Assertions.assertTrue(game > 0, "failed to create game");
+
+
+    }
+
+    @Test
+    @DisplayName("createGameBad")
+    public void createGameBad() throws ResponseErrors{
+        facade.register("jacob", "pass", "jacob@gmail.com");
+        Assertions.assertThrows(ResponseErrors.class, () -> facade.createGame("bad", "game"),
+                "created game with a bad token");
+    }
+
+
+
 
 
 
